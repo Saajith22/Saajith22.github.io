@@ -1,0 +1,11 @@
+:root {
+  --size: 400px;
+}
+
+.holder {
+  border: 2px solid black;
+  width: var(--size);
+  height: var(--size);
+  max-width: var(--size);
+  max-height: var(--size);
+}
