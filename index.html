@@ -40,7 +40,7 @@
         const color = new cv.Scalar(255, 255, 255);
         const thickness = 2;
 
-        const lineImage = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC1);
+        // const lineImage = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC1);
         for (let i = 0; i < lines.rows; ++i) {
           const startPoint = new cv.Point(
             lines.data32S[i * 4],
@@ -52,37 +52,37 @@
             lines.data32S[i * 4 + 3]
           );
 
-          cv.line(lineImage, startPoint, endPoint, color, thickness);
+          cv.line(dst, startPoint, endPoint, color, thickness);
         }
 
-        const contours = new cv.MatVector();
-        const hierarchy = new cv.Mat();
-        cv.findContours(
-          lineImage,
-          contours,
-          hierarchy,
-          cv.RETR_EXTERNAL,
-          cv.CHAIN_APPROX_SIMPLE
-        );
+        // const contours = new cv.MatVector();
+        // const hierarchy = new cv.Mat();
+        // cv.findContours(
+        //   lineImage,
+        //   contours,
+        //   hierarchy,
+        //   cv.RETR_EXTERNAL,
+        //   cv.CHAIN_APPROX_SIMPLE
+        // );
 
-        // Find the largest contour
-        let largestContour = contours.get(0);
-        let maxArea = cv.contourArea(largestContour);
-        for (let i = 1; i < contours.size(); ++i) {
-          let contour = contours.get(i);
-          let area = cv.contourArea(contour);
-          if (area > maxArea) {
-            largestContour = contour;
-            maxArea = area;
-          }
-        }
+        // // Find the largest contour
+        // let largestContour = contours.get(0);
+        // let maxArea = cv.contourArea(largestContour);
+        // for (let i = 1; i < contours.size(); ++i) {
+        //   let contour = contours.get(i);
+        //   let area = cv.contourArea(contour);
+        //   if (area > maxArea) {
+        //     largestContour = contour;
+        //     maxArea = area;
+        //   }
+        // }
 
-        const matty = new cv.MatVector();
-        matty.push_back(largestContour);
+        // const matty = new cv.MatVector();
+        // matty.push_back(largestContour);
 
-        // Fill the largest contour with black color
-        // const fillColor = new cv.Scalar(0, 255, 0); // Black color
-        cv.drawContours(dst, matty, -1, color, cv.FILLED);
+        // // Fill the largest contour with black color
+        // // const fillColor = new cv.Scalar(0, 255, 0); // Black color
+        // cv.drawContours(dst, matty, -1, color, cv.FILLED);
 
         cv.bitwise_not(dst, dst);
         cv.medianBlur(dst, dst, 5);
