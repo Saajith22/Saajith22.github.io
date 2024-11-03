@@ -4,8 +4,19 @@
 
 .holder {
   border: 2px solid black;
+  border-radius: 10px;
   width: var(--size);
   height: var(--size);
   max-width: var(--size);
   max-height: var(--size);
+}
+
+.contour {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.contour:hover {
+  border: 1px solid red;
 }
