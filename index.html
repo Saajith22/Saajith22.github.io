@@ -67,18 +67,19 @@
           lineImage,
           contours,
           hierarchy,
-          cv.RETR_EXTERNAL,
+          cv.RETR_TREE,
           cv.CHAIN_APPROX_SIMPLE
         );
 
+        const container = document.getElementById("contours-container");
+        container.innerHTML = "";
+
         for (let i = 0; i < contours.size(); i++) {
           const contour = contours.get(i).data32S;
-          const container = document.getElementById("contours-container");
-          container.innerHTML = "";
 
           const points = [];
-          for (let i = 0; i < contour.length; i += 2) {
-            points.push(`${contour[i]}px ${contour[i + 1]}px`);
+          for (let j = 0; j < contour.length; j += 2) {
+            points.push(`${contour[j]}px ${contour[j + 1]}px`);
           }
 
           const colors = ["red", "blue", "green", "yellow", "zinc", "pink"];
@@ -94,14 +95,16 @@
 
         cv.drawContours(lineImage, contours, -1, color, 2);
         cv.bitwise_not(lineImage, lineImage);
-
         cv.medianBlur(lineImage, lineImage, 3);
         cv.imshow("output", lineImage);
 
-        //delete stuff
+        // Clean up
         src.delete();
         dst.delete();
         lines.delete();
+        lineImage.delete();
+        contours.delete();
+        hierarchy.delete();
       });
     </script>
   </body>
