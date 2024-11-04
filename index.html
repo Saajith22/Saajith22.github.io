@@ -60,7 +60,7 @@
 
           cv.line(lineImage, startPoint, endPoint, color, thickness);
 
-          const increment = 0.6;
+          const increment = 0.1;
           cv.line(
             lineImage,
             new cv.Point(startPoint.x + increment, startPoint.y + increment),
@@ -100,7 +100,7 @@
           div.style.clipPath = `polygon(${points.join(", ")})`;
           div.className = `contour ${cc} opacity-0 hover:opacity-100`;
 
-          container.appendChild(div);
+          // container.appendChild(div);
         }
 
         cv.drawContours(lineImage, contours, -1, color, 2);
