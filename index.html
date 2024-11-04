@@ -44,7 +44,7 @@
         cv.HoughLinesP(src, lines, 1, Math.PI / 180, 2, 0, 0);
 
         const color = new cv.Scalar(255, 255, 255);
-        const thickness = 2;
+        const thickness = 1;
 
         const lineImage = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC1);
         for (let i = 0; i < lines.rows; ++i) {
@@ -59,6 +59,15 @@
           );
 
           cv.line(lineImage, startPoint, endPoint, color, thickness);
+
+          const increment = 0.6;
+          cv.line(
+            lineImage,
+            new cv.Point(startPoint.x + increment, startPoint.y + increment),
+            new cv.Point(endPoint.x + increment, endPoint.y + increment),
+            color,
+            thickness
+          );
         }
 
         const contours = new cv.MatVector();
