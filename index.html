@@ -41,7 +41,25 @@
 
         cv.cvtColor(src, src, cv.COLOR_RGB2GRAY);
         cv.Canny(src, src, 50, 200, 3);
-        cv.HoughLinesP(src, lines, 1, Math.PI / 180, 2, 0, 0);
+
+        // Apply morphological operations to remove unwanted lines
+        const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(5, 5));
+        cv.morphologyEx(src, src, cv.MORPH_CLOSE, kernel);
+
+        // Create a mask to focus on the region of interest
+        const mask = new cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC1);
+        cv.rectangle(
+          mask,
+          new cv.Point(50, 50),
+          new cv.Point(450, 450),
+          new cv.Scalar(255, 255, 255),
+          -1
+        );
+        const maskedEdges = new cv.Mat();
+        cv.bitwise_and(src, mask, maskedEdges);
+
+        // Detect lines using HoughLinesP
+        cv.HoughLinesP(maskedEdges, lines, 1, Math.PI / 180, 2, 0, 0);
 
         const color = new cv.Scalar(255, 255, 255);
         const thickness = 1;
@@ -59,15 +77,6 @@
           );
 
           cv.line(lineImage, startPoint, endPoint, color, thickness);
-
-          const increment = 0.1;
-          cv.line(
-            lineImage,
-            new cv.Point(startPoint.x + increment, startPoint.y + increment),
-            new cv.Point(endPoint.x + increment, endPoint.y + increment),
-            color,
-            thickness
-          );
         }
 
         const contours = new cv.MatVector();
@@ -81,7 +90,7 @@
         );
 
         const container = document.getElementById("contours-container");
-        container.innerHTML = "";
+        container.innerHTML = ""; // Clear the container once
 
         for (let i = 0; i < contours.size(); i++) {
           const contour = contours.get(i).data32S;
@@ -98,8 +107,7 @@
 
           const div = document.createElement("div");
           div.style.clipPath = `polygon(${points.join(", ")})`;
-          div.className = `contour ${cc} opacity-0 hover:opacity-100`;
-
+          div.className = `contour ${cc}`;
           // container.appendChild(div);
         }
 
@@ -115,6 +123,9 @@
         lineImage.delete();
         contours.delete();
         hierarchy.delete();
+        mask.delete();
+        maskedEdges.delete();
+        kernel.delete();
       });
     </script>
   </body>
