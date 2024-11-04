@@ -89,7 +89,8 @@
 
           const div = document.createElement("div");
           div.style.clipPath = `polygon(${points.join(", ")})`;
-          div.className = `contour ${cc}`;
+          div.className = `contour ${cc} opacity-0 hover:opacity-100`;
+
           container.appendChild(div);
         }
 
