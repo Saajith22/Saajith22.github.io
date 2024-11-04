@@ -77,6 +77,15 @@
           );
 
           cv.line(lineImage, startPoint, endPoint, color, thickness);
+
+          const increment = 0.6;
+          cv.line(
+            lineImage,
+            new cv.Point(startPoint.x + increment, startPoint.y + increment),
+            new cv.Point(endPoint.x + increment, endPoint.y + increment),
+            color,
+            thickness
+          );
         }
 
         const contours = new cv.MatVector();
