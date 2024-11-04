@@ -40,7 +40,8 @@
         const lines = new cv.Mat();
 
         cv.cvtColor(src, src, cv.COLOR_RGB2GRAY);
-        cv.Canny(src, src, 50, 200, 3);
+        cv.GaussianBlur(src, src, new cv.Size(5, 5), 0);
+        cv.Canny(src, src, 50, 50, 3);
         cv.HoughLinesP(src, lines, 1, Math.PI / 180, 2, 0, 0);
 
         const color = new cv.Scalar(255, 255, 255);
@@ -59,16 +60,16 @@
           );
 
           cv.line(lineImage, startPoint, endPoint, color, thickness);
-
-          const increment = 0.1;
-          cv.line(
-            lineImage,
-            new cv.Point(startPoint.x + increment, startPoint.y + increment),
-            new cv.Point(endPoint.x + increment, endPoint.y + increment),
-            color,
-            thickness
-          );
         }
+
+        const kernel = cv.getStructuringElement(
+          cv.MORPH_RECT,
+          new cv.Size(3, 3)
+        );
+
+        cv.dilate(lineImage, lineImage, kernel);
+        cv.erode(lineImage, lineImage, kernel);
+        cv.morphologyEx(lineImage, lineImage, cv.MORPH_CLOSE, kernel);
 
         const contours = new cv.MatVector();
         const hierarchy = new cv.Mat();
@@ -100,7 +101,7 @@
           div.style.clipPath = `polygon(${points.join(", ")})`;
           div.className = `contour ${cc} opacity-0 hover:opacity-100`;
 
-          // container.appendChild(div);
+          container.appendChild(div);
         }
 
         cv.drawContours(lineImage, contours, -1, color, 2);
@@ -115,6 +116,7 @@
         lineImage.delete();
         contours.delete();
         hierarchy.delete();
+        kernel.delete();
       });
     </script>
   </body>
